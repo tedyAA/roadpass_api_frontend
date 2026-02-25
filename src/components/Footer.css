@@ -3,11 +3,7 @@
     display: flex;
     justify-content: space-between;
     padding: 40px 80px;
-    background: linear-gradient(
-            135deg,
-            #0ea5e9 0%,
-            #f4e1c1 100%
-    );
+    background-color: rgb(50 132 213 / 90%);
     color: #fff;
     flex-wrap: wrap;
 }
