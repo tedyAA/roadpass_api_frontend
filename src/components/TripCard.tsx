@@ -1,22 +1,21 @@
 import React from "react";
 import "./TripCard.css";
+import type { Trip } from "../types";
 
 interface TripCardProps {
-    imageUrl: string;
-    title: string;
-    rating: number; // 0-5
+    trip: Trip;
 }
 
-const TripCard: React.FC<TripCardProps> = ({ imageUrl, title, rating }) => {
+const TripCard: React.FC<TripCardProps> = ({ trip }) => {
     return (
-        <div className="trip-card" style={{ backgroundImage: `url(${imageUrl})` }}>
+        <div className="trip-card" style={{ backgroundImage: `url(${trip.image_url})` }}>
             <div className="gradient-overlay">
-                <h3 className="trip-title">{title}</h3>
+                <h3 className="trip-title">{trip.name}</h3>
                 <div className="trip-rating">
                     {Array.from({ length: 5 }).map((_, idx) => (
-                        <span key={idx} className={idx < rating ? "star filled" : "star"}>
-              ★
-            </span>
+                        <span key={idx} className={idx < trip.rating ? "star filled" : "star"}>
+                            ★
+                        </span>
                     ))}
                 </div>
             </div>
