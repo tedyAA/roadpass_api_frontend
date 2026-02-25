@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar.tsx";
 import './Home.css'
 import TripCard from "../components/TripCard.tsx";
 import {Link} from "react-router-dom";
+import Footer from "../components/Footer";
 
 function Home() {
     const trips = [
@@ -61,6 +62,7 @@ function Home() {
                     </Link>
                 </div>
             </section>
+            <Footer />
         </div>
     );
 }
