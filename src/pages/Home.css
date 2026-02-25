@@ -1,0 +1,74 @@
+.stairs-section {
+    display: flex;
+    align-items: flex-start; /* align top of cards with text */
+    justify-content: center;
+    gap: 7rem; /* space between left and right */
+    padding: 60px 80px;
+    background: #ffffff;
+}
+
+.cards-left {
+    display: flex;
+    gap: 20px; /* space between cards horizontally */
+    position: relative;
+}
+
+/* Wrapper sets the stairs Y position */
+.card-wrapper:nth-child(1) { transform: translateY(0px); }
+.card-wrapper:nth-child(2) { transform: translateY(20px); }
+.card-wrapper:nth-child(3) { transform: translateY(40px); }
+
+/* TripCard itself floats inside the wrapper */
+.card-wrapper .card {
+    width: 150px;
+    height: 100px;
+    background-color: #27ae60;
+    color: white;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+
+    animation: float 3s ease-in-out infinite alternate;
+}
+
+/* Floating animation */
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0); }
+}
+
+/* Right side text */
+.content-right {
+    max-width: 500px;
+}
+
+.content-right h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.content-right p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+}
+.btn{
+    padding: 5px 12px;
+    background-color: #f5d6a1;
+    color: #2c3e50;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: .2s ease-in-out 0s;
+
+    &:hover{
+        border: 1px solid #f1ab3f;
+        transform: scale(1.1);
+        cursor: pointer;
+    }
+}
