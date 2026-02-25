@@ -1,50 +1,51 @@
 import Hero from "../components/Hero.tsx";
 import heroVideo from "../assets/video.mov";
 import NavBar from "../components/NavBar.tsx";
-import './Home.css'
+import './Home.css';
 import TripCard from "../components/TripCard.tsx";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import type { Trip } from "../types";
 
 function Home() {
-    const trips = [
-        {
-            id: 1,
-            title: "Sunny Beach",
-            imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-            rating: 5,
-        },
-        {
-            id: 2,
-            title: "Mountain Escape",
-            imageUrl: "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-            rating: 4,
-        },
-        {
-            id: 3,
-            title: "Tropical Paradise",
-            imageUrl: "https://images.unsplash.com/photo-1493558103817-58b2924bce98",
-            rating: 3,
-        },
-    ];
+    const [trips, setTrips] = useState<Trip[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchTrips = async () => {
+            try {
+                const response = await axios.get("http://localhost:3000/api/v1/trips", {
+                    params: { per_page: 3, page: 1 },
+                });
+                setTrips(response.data.trips);
+            } catch (err: any) {
+                setError(err.message || "Error fetching trips");
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchTrips();
+    }, []);
 
     return (
         <div>
-            <NavBar/>
+            <NavBar />
             <Hero
                 title="Want to go on a trip?"
                 subtitle="Discover amazing destinations around the world"
                 videoSrc={heroVideo}
             />
+
             <section className="stairs-section">
                 <div className="cards-left">
-                    {trips.map((trip, i) => (
+                    {loading && <p>Loading trips...</p>}
+                    {error && <p>Error: {error}</p>}
+                    {!loading && !error && trips.map((trip, i) => (
                         <div key={trip.id} className={`card-wrapper card${i + 1}`}>
-                            <TripCard
-                                imageUrl={trip.imageUrl}
-                                title={trip.title}
-                                rating={trip.rating}
-                            />
+                            <TripCard trip={trip} />
                         </div>
                     ))}
                 </div>
@@ -62,6 +63,7 @@ function Home() {
                     </Link>
                 </div>
             </section>
+
             <Footer />
         </div>
     );

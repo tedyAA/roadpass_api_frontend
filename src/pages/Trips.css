@@ -3,6 +3,8 @@
     grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
     gap: 20px;
     margin-top: 40px;
+    padding-left: 100px;
+    padding-right: 100px;
 }
 
 .trip-card {
@@ -19,7 +21,7 @@
 }
 
 .gradient-overlay {
-    background: linear-gradient(to top, rgba(0, 150, 255, 0.9) 0%, rgba(0,150,255,0) 35%);
+    background: linear-gradient(to top, rgba(0, 150, 255, 0.9) 0%, rgba(0,150,255,0) 50%);
     padding: 10px;
     color: white;
 }
@@ -39,6 +41,7 @@
     align-items: center;
     gap: 15px;
     margin-top: 30px;
+    margin-bottom: 50px;
 }
 
 .pagination button {
