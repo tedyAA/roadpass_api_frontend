@@ -13,7 +13,7 @@ const Hero: React.FC<HeroProps> = ({ title, subtitle, videoSrc }) => {
         <section className="hero">
             <div className="hero-content">
                 {/* TEXT */}
-                <div className="hero-text">
+                <div className="hero-text sour-gummy-100">
                     <h1>{title}</h1>
                     {subtitle && <p>{subtitle}</p>}
                 </div>
