@@ -1,33 +1,40 @@
-import NavBar from "../components/NavBar.tsx";
-import Hero from "../components/Hero.tsx";
-import heroVideo from "../assets/video.mov";
-import './Trips.css';
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
+
+import NavBar from "../components/NavBar";
+import Hero from "../components/Hero";
+import TripCard from "../components/TripCard";
+
+import heroVideo from "../assets/video.mov";
+import "./Trips.css";
+
 import type { Trip } from "../types";
-import { useEffect, useState } from "react";
-import TripCard from "../components/TripCard.tsx";
+import { backupTrips } from "../helpers/backup";
+
+const API_URL = "http://localhost:3000/api/v1/trips";
+const PER_PAGE = 8;
 
 function Trips() {
     const [trips, setTrips] = useState<Trip[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [apiError, setApiError] = useState(false);
+
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
-    // Filters
     const [search, setSearch] = useState("");
     const [minRating, setMinRating] = useState<number | "">("");
     const [sort, setSort] = useState<"asc" | "desc" | "">("");
 
-    const perPage = 8;
-
-    const fetchTrips = async () => {
+    const fetchTrips = useCallback(async () => {
         setLoading(true);
+        setApiError(false);
+
         try {
-            const response = await axios.get("http://localhost:3000/api/v1/trips", {
+            const response = await axios.get(API_URL, {
                 params: {
                     page,
-                    per_page: perPage,
+                    per_page: PER_PAGE,
                     search: search || undefined,
                     min_rating: minRating || undefined,
                     sort: sort || undefined,
@@ -36,18 +43,24 @@ function Trips() {
 
             setTrips(response.data.trips);
             setTotalPages(response.data.meta.total_pages);
-        } catch (err: any) {
-            setError(err.message || "Error fetching trips");
+        } catch (error) {
+            console.warn("API unavailable — using backup data");
+            setApiError(true);
+            setTrips(backupTrips);
+            setTotalPages(1);
         } finally {
             setLoading(false);
         }
-    };
+    }, [page, search, minRating, sort]);
 
     useEffect(() => {
         fetchTrips();
-    }, [page, search, minRating, sort]);
+    }, [fetchTrips]);
 
-    // Handle clearing filters
+    useEffect(() => {
+        setPage(1);
+    }, [search, minRating, sort]);
+
     const handleClearFilters = () => {
         setSearch("");
         setMinRating("");
@@ -55,12 +68,10 @@ function Trips() {
         setPage(1);
     };
 
-    if (loading) return <p>Loading trips...</p>;
-    if (error) return <p>Error: {error}</p>;
-
     return (
         <div className="page">
             <NavBar />
+
             <Hero
                 title="Discover our luxurious trips!"
                 subtitle="Adventure is in your hands"
@@ -78,17 +89,23 @@ function Trips() {
 
                 <select
                     value={minRating}
-                    onChange={(e) => setMinRating(e.target.value ? Number(e.target.value) : "")}
+                    onChange={(e) =>
+                        setMinRating(e.target.value ? Number(e.target.value) : "")
+                    }
                 >
                     <option value="">Min Rating</option>
                     {[1, 2, 3, 4, 5].map((r) => (
-                        <option key={r} value={r}>{r}+</option>
+                        <option key={r} value={r}>
+                            {r}+
+                        </option>
                     ))}
                 </select>
 
                 <select
                     value={sort}
-                    onChange={(e) => setSort(e.target.value as "asc" | "desc" | "")}
+                    onChange={(e) =>
+                        setSort(e.target.value as "asc" | "desc" | "")
+                    }
                 >
                     <option value="">Sort by rating</option>
                     <option value="asc">Rating Ascending</option>
@@ -98,34 +115,50 @@ function Trips() {
                 <button onClick={handleClearFilters}>Clear Filters</button>
             </div>
 
-            {/* Trips Grid */}
+            {apiError && (
+                <div className="api-warning">
+                    API unavailable — showing backup trips.
+                </div>
+            )}
             <section>
-                <div className="trips-grid">
-                    {trips.map((trip) => (
-                        <TripCard key={trip.id} trip={trip} />
-                    ))}
-                </div>
+                {loading ? (
+                    <p className="loading">Loading trips...</p>
+                ) : (
+                    <>
+                        <div className="trips-grid">
+                            {trips.map((trip) => (
+                                <TripCard key={trip.id} trip={trip} />
+                            ))}
+                        </div>
+                        {!apiError && (
+                            <div className="pagination">
+                                <button
+                                    onClick={() =>
+                                        setPage((prev) => Math.max(prev - 1, 1))
+                                    }
+                                    disabled={page === 1}
+                                >
+                                    Previous
+                                </button>
 
-                {/* Pagination */}
-                <div className="pagination">
-                    <button
-                        onClick={() => setPage((p) => Math.max(p - 1, 1))}
-                        disabled={page === 1}
-                    >
-                        Previous
-                    </button>
+                                <span>
+                Page {page} of {totalPages}
+              </span>
 
-                    <span>
-                        Page {page} of {totalPages}
-                    </span>
-
-                    <button
-                        onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
-                        disabled={page === totalPages}
-                    >
-                        Next
-                    </button>
-                </div>
+                                <button
+                                    onClick={() =>
+                                        setPage((prev) =>
+                                            Math.min(prev + 1, totalPages)
+                                        )
+                                    }
+                                    disabled={page === totalPages}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        )}
+                    </>
+                )}
             </section>
         </div>
     );
