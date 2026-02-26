@@ -7,12 +7,13 @@ import TripCard from "../components/TripCard";
 
 import heroVideo from "../assets/video.mov";
 import "./Trips.css";
+import TripModal from "../components/TripModal";
 
 import type { Trip } from "../types";
 import { backupTrips } from "../helpers/backup";
 
 const API_URL = "http://localhost:3000/api/v1/trips";
-const PER_PAGE = 8;
+const PER_PAGE = 9;
 
 function Trips() {
     const [trips, setTrips] = useState<Trip[]>([]);
@@ -25,6 +26,8 @@ function Trips() {
     const [search, setSearch] = useState("");
     const [minRating, setMinRating] = useState<number | "">("");
     const [sort, setSort] = useState<"asc" | "desc" | "">("");
+
+    const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
 
     const fetchTrips = useCallback(async () => {
         setLoading(true);
@@ -125,9 +128,15 @@ function Trips() {
                     <p className="loading">Loading trips...</p>
                 ) : (
                     <>
+                        <TripModal
+                            trip={selectedTrip}
+                            onClose={() => setSelectedTrip(null)}
+                        />
                         <div className="trips-grid">
                             {trips.map((trip) => (
-                                <TripCard key={trip.id} trip={trip} />
+                                <div key={trip.id} onClick={() => setSelectedTrip(trip)}>
+                                    <TripCard trip={trip}/>
+                                </div>
                             ))}
                         </div>
                         {!apiError && (
