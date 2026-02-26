@@ -8,12 +8,18 @@ interface TripCardProps {
 
 const TripCard: React.FC<TripCardProps> = ({ trip }) => {
     return (
-        <div className="trip-card" style={{ backgroundImage: `url(${trip.image_url})` }}>
+        <div
+            className="trip-card"
+            style={{ backgroundImage: `url(${trip.image_url})` }}
+        >
             <div className="gradient-overlay">
                 <h3 className="trip-title">{trip.name}</h3>
                 <div className="trip-rating">
                     {Array.from({ length: 5 }).map((_, idx) => (
-                        <span key={idx} className={idx < trip.rating ? "star filled" : "star"}>
+                        <span
+                            key={idx}
+                            className={idx < trip.rating ? "star filled" : "star"}
+                        >
                             ★
                         </span>
                     ))}

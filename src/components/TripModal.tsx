@@ -8,6 +8,7 @@ interface TripModalProps {
 }
 
 const TripModal: React.FC<TripModalProps> = ({ trip, onClose }) => {
+    // Close on ESC
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();

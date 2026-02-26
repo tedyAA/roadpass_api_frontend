@@ -1,20 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Navbar.css";
 import logo from "../assets/logo.png";
 
 const Navbar: React.FC = () => {
+    const [menuOpen, setMenuOpen] = useState(false);
+
     return (
         <nav className="navbar">
             <div className="nav-left">
-                <img className="logo" src={logo}></img>
+                <img className="logo" src={logo} alt="Logo" />
             </div>
 
-            <div className="nav-center sour-gummy-100">
+            <div className={`nav-center ${menuOpen ? "open" : ""}`}>
                 <a href="/">Home</a>
                 <a href="/trips">Trips</a>
             </div>
 
-            <div className="nav-right sour-gummy-100">
+            <div className={`nav-right ${menuOpen ? "open" : ""}`}>
                 <a
                     href="https://github.com/tedyAA"
                     target="_blank"
@@ -31,6 +33,16 @@ const Navbar: React.FC = () => {
                 >
                     LinkedIn
                 </a>
+            </div>
+
+            {/* Hamburger menu for mobile */}
+            <div
+                className={`hamburger ${menuOpen ? "active" : ""}`}
+                onClick={() => setMenuOpen(!menuOpen)}
+            >
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </nav>
     );
