@@ -1,4 +1,3 @@
-// src/types.ts
 export interface Trip {
     id: number;
     name: string;
