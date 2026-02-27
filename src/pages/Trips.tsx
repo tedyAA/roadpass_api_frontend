@@ -6,6 +6,7 @@ import Hero from "../components/Hero";
 import TripCard from "../components/TripCard";
 import Pagination from "../components/Pagination";
 import TripModal from "../components/TripModal";
+import TripFilters from "../components/TripFilters";
 
 import heroVideo from "../assets/video.mov";
 import "./Trips.css";
@@ -98,42 +99,16 @@ function Trips() {
                 videoSrc={heroVideo}
             />
 
-            {/* Filters */}
-            <div className="filters">
-                <input
-                    type="text"
-                    placeholder="Search by name..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-
-                <select
-                    value={minRating}
-                    onChange={(e) =>
-                        setMinRating(e.target.value ? Number(e.target.value) : "")
-                    }
-                >
-                    <option value="">Min Rating</option>
-                    {[1, 2, 3, 4, 5].map((r) => (
-                        <option key={r} value={r}>
-                            {r}+
-                        </option>
-                    ))}
-                </select>
-
-                <select
-                    value={sort}
-                    onChange={(e) =>
-                        setSort(e.target.value as "asc" | "desc" | "")
-                    }
-                >
-                    <option value="">Sort by rating</option>
-                    <option value="asc">Rating Ascending</option>
-                    <option value="desc">Rating Descending</option>
-                </select>
-
-                <button onClick={handleClearFilters}>Clear Filters</button>
-            </div>
+            <TripFilters
+                search={search}
+                minRating={minRating}
+                sort={sort}
+                onSearchChange={setSearch}
+                onMinRatingChange={setMinRating}
+                onSortChange={setSort}
+                onClear={handleClearFilters}
+                disabled={loading}
+            />
 
             {apiError && (
                 <div className="error-state">

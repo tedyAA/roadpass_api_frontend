@@ -1,0 +1,50 @@
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px auto;
+    max-width: 900px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.filters input,
+.filters select {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    background-color: #fff;
+    transition: all 0.2s ease;
+    min-width: 140px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.filters button {
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters input,
+    .filters select,
+    .filters button {
+        width: 100%;
+        min-width: 0;
+    }
+}
