@@ -112,36 +112,6 @@
     color: #e67e22;
 }
 
-/* Pagination */
-.pagination {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-    color: #2c3e50;
-}
-
-.pagination button {
-    padding: 8px 14px;
-    border-radius: 6px;
-    border: 1px solid #ddd;
-    background: #fff;
-    color: #2c3e50;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
-}
-
-.pagination button:hover:not(:disabled) {
-    background-color: #2c3e50;
-    color: #fff;
-}
-
-.pagination button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
 @media (min-width: 769px) and (max-width: 1200px) {
     .trips-grid {
         grid-template-columns: repeat(2, 270px);

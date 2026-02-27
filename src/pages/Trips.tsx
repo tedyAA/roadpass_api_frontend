@@ -4,10 +4,11 @@ import axios from "axios";
 import NavBar from "../components/NavBar";
 import Hero from "../components/Hero";
 import TripCard from "../components/TripCard";
+import Pagination from "../components/Pagination";
+import TripModal from "../components/TripModal";
 
 import heroVideo from "../assets/video.mov";
 import "./Trips.css";
-import TripModal from "../components/TripModal";
 
 import type { Trip } from "../types";
 import { backupTrips } from "../helpers/backup";
@@ -174,31 +175,11 @@ function Trips() {
                             ))}
                         </div>
                         {!apiError && (
-                            <div className="pagination">
-                                <button
-                                    onClick={() =>
-                                        setPage((prev) => Math.max(prev - 1, 1))
-                                    }
-                                    disabled={page === 1}
-                                >
-                                    Previous
-                                </button>
-
-                                <span>
-                Page {page} of {totalPages}
-              </span>
-
-                                <button
-                                    onClick={() =>
-                                        setPage((prev) =>
-                                            Math.min(prev + 1, totalPages)
-                                        )
-                                    }
-                                    disabled={page === totalPages}
-                                >
-                                    Next
-                                </button>
-                            </div>
+                            <Pagination
+                                page={page}
+                                totalPages={totalPages}
+                                onPageChange={(newPage) => setPage(newPage)}
+                            />
                         )}
                     </>
                 )}
