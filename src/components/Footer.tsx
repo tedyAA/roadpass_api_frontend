@@ -1,4 +1,3 @@
-// src/components/Footer.tsx
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png"; // replace with your logo path
@@ -7,14 +6,12 @@ import "./Footer.css";
 const Footer: React.FC = () => {
     return (
         <footer className="footer sour-gummy-100">
-            {/* Left */}
             <div className="footer-left">
                 <img src={logo} alt="Logo" className="footer-logo" />
                 <h2 className="footer-title">Trip Explorer</h2>
                 <p className="footer-slogan">Discover your next adventure</p>
             </div>
 
-            {/* Center */}
             <div className="footer-center">
                 <h2>Links</h2>
                 <ul>
@@ -23,7 +20,6 @@ const Footer: React.FC = () => {
                 </ul>
             </div>
 
-            {/* Right */}
             <div className="footer-right">
                 <h2>Contact</h2>
                 <p>123 Main Street, City, Country</p>

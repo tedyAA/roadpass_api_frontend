@@ -12,13 +12,11 @@ const Hero: React.FC<HeroProps> = ({ title, subtitle, videoSrc }) => {
     return (
         <section className="hero">
             <div className="hero-content">
-                {/* TEXT */}
                 <div className="hero-text sour-gummy-100">
                     <h1>{title}</h1>
                     {subtitle && <p>{subtitle}</p>}
                 </div>
 
-                {/* VIDEO BUBBLE */}
                 <div className="video-bubble">
                     <video
                         src={videoSrc}
@@ -30,7 +28,6 @@ const Hero: React.FC<HeroProps> = ({ title, subtitle, videoSrc }) => {
                 </div>
             </div>
 
-            {/* WAVES */}
             <svg
                 className="hero-waves"
                 xmlns="http://www.w3.org/2000/svg"

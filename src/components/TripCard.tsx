@@ -10,7 +10,12 @@ const TripCard: React.FC<TripCardProps> = ({ trip }) => {
     return (
         <div
             className="trip-card"
-            style={{ backgroundImage: `url(${trip.image_url})` }}
+            style={{
+                backgroundImage: `
+            linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(255, 255, 0, 0)),
+            url(${trip.image_url})
+        `
+            }}
         >
             <div className="gradient-overlay">
                 <h3 className="trip-title">{trip.name}</h3>

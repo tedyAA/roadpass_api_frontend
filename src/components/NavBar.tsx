@@ -35,7 +35,6 @@ const Navbar: React.FC = () => {
                 </a>
             </div>
 
-            {/* Hamburger menu for mobile */}
             <div
                 className={`hamburger ${menuOpen ? "active" : ""}`}
                 onClick={() => setMenuOpen(!menuOpen)}

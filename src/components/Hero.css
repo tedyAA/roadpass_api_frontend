@@ -85,7 +85,6 @@
         transform: translate(85px, 0%);
     }
 }
-/* 🔥 ROUND VIDEO BUBBLE */
 .video-bubble {
     width: 400px;
     height: 400px;
@@ -102,7 +101,6 @@
     object-fit: cover;
 }
 
-/* Responsive */
 @media (max-width: 900px) {
     .hero-content {
         flex-direction: column;
