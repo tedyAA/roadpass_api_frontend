@@ -28,6 +28,7 @@ function Trips() {
     const [search, setSearch] = useState("");
     const [minRating, setMinRating] = useState<number | "">("");
     const [sort, setSort] = useState<"asc" | "desc" | "">("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
 
     const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
 
@@ -45,11 +46,12 @@ function Trips() {
             if (FORCE_ERROR) {
                 throw new Error("Simulated API failure");
             }
+
             const response = await axios.get(API_URL, {
                 params: {
                     page,
                     per_page: PER_PAGE,
-                    search: search || undefined,
+                    search: debouncedSearch || undefined,
                     min_rating: minRating || undefined,
                     sort: sort || undefined,
                 },
@@ -58,7 +60,6 @@ function Trips() {
             setTrips(response.data.trips);
             setTotalPages(response.data.meta.total_pages);
         } catch (error) {
-            console.warn("API unavailable — using backup data");
             setApiError(true);
             setTrips(backupTrips);
             setTotalPages(1);
@@ -72,7 +73,7 @@ function Trips() {
                 setLoading(false);
             }
         }
-    }, [page, search, minRating, sort]);
+    }, [page, debouncedSearch, minRating, sort]);
 
     useEffect(() => {
         fetchTrips();
@@ -80,10 +81,21 @@ function Trips() {
 
     useEffect(() => {
         setPage(1);
-    }, [search, minRating, sort]);
+    }, [debouncedSearch, minRating, sort]);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedSearch(search);
+        }, 500);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [search]);
 
     const handleClearFilters = () => {
         setSearch("");
+        setDebouncedSearch("");
         setMinRating("");
         setSort("");
         setPage(1);
@@ -91,7 +103,7 @@ function Trips() {
 
     return (
         <div className="page">
-            <NavBar />
+            <NavBar/>
 
             <Hero
                 title="Discover our luxurious trips!"
@@ -123,18 +135,29 @@ function Trips() {
                     </button>
                 </div>
             )}
+
             <section>
                 {loading ? (
                     <div className="trips-grid">
-                        {Array.from({ length: 6 }).map((_, i) => (
+                        {Array.from({length: 6}).map((_, i) => (
                             <div key={i} className="trip-card skeleton">
-                                <div className="skeleton-image" />
+                                <div className="skeleton-image"/>
                                 <div className="skeleton-content">
-                                    <div className="skeleton-line title" />
-                                    <div className="skeleton-line small" />
+                                    <div className="skeleton-line title"/>
+                                    <div className="skeleton-line small"/>
                                 </div>
                             </div>
                         ))}
+                    </div>
+                ) : trips.length === 0 ? (
+                    <div className="no-results">
+                        <h3>No trips found</h3>
+                        <p>
+                            Try adjusting your filters or search term to find trips.
+                        </p>
+                        <button className="btn" onClick={handleClearFilters}>
+                            Clear Filters
+                        </button>
                     </div>
                 ) : (
                     <>
@@ -149,7 +172,8 @@ function Trips() {
                                 </div>
                             ))}
                         </div>
-                        {!apiError && (
+
+                        {!apiError && totalPages > 1 && (
                             <Pagination
                                 page={page}
                                 totalPages={totalPages}
