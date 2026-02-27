@@ -36,26 +36,29 @@ function Trips() {
     // change to true to trigger
     const FORCE_ERROR = false;
 
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
     const fetchTrips = useCallback(async () => {
         setLoading(true);
         setApiError(false);
-
-        const start = Date.now();
 
         try {
             if (FORCE_ERROR) {
                 throw new Error("Simulated API failure");
             }
 
-            const response = await axios.get(API_URL, {
-                params: {
-                    page,
-                    per_page: PER_PAGE,
-                    search: debouncedSearch || undefined,
-                    min_rating: minRating || undefined,
-                    sort: sort || undefined,
-                },
-            });
+            const [response] = await Promise.all([
+                axios.get(API_URL, {
+                    params: {
+                        page,
+                        per_page: PER_PAGE,
+                        search: debouncedSearch || undefined,
+                        min_rating: minRating || undefined,
+                        sort: sort || undefined,
+                    },
+                }),
+                sleep(3000) // ensures at least 3 seconds loading
+            ]);
 
             setTrips(response.data.trips);
             setTotalPages(response.data.meta.total_pages);
@@ -64,17 +67,9 @@ function Trips() {
             setTrips(backupTrips);
             setTotalPages(1);
         } finally {
-            const elapsed = Date.now() - start;
-            const remaining = 3000 - elapsed;
-
-            if (remaining > 0) {
-                setTimeout(() => setLoading(false), remaining);
-            } else {
-                setLoading(false);
-            }
+            setLoading(false);
         }
     }, [page, debouncedSearch, minRating, sort]);
-
     useEffect(() => {
         fetchTrips();
     }, [fetchTrips]);
