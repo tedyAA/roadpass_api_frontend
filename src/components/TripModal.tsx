@@ -8,7 +8,6 @@ interface TripModalProps {
 }
 
 const TripModal: React.FC<TripModalProps> = ({ trip, onClose }) => {
-    // Close on ESC
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
@@ -34,8 +33,9 @@ const TripModal: React.FC<TripModalProps> = ({ trip, onClose }) => {
 
                 <div className="modal-body">
                     <h2>{trip.name}</h2>
-                    <p className="modal-rating">⭐ {trip.rating}/5</p>
+                    <p>{trip.short_description}</p>
                     <p>{trip.long_description}</p>
+                    <p className="modal-rating">⭐ {trip.rating}/5</p>
                 </div>
             </div>
         </div>
