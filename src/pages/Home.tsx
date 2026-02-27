@@ -8,25 +8,32 @@ import Footer from "../components/Footer";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import type { Trip } from "../types";
+import { backupTrips } from "../helpers/backup";
 
 function Home() {
     const [trips, setTrips] = useState<Trip[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchTrips = async () => {
+            setLoading(true);
+
             try {
                 const response = await axios.get("http://localhost:3000/api/v1/trips", {
                     params: { per_page: 3, page: 1 },
                 });
-                setTrips(response.data.trips);
+                if (Array.isArray(response.data.trips) && response.data.trips.length > 0) {
+                    setTrips(response.data.trips);
+                } else {
+                    setTrips(backupTrips.slice(0, 3)); // fallback
+                }
             } catch (err: any) {
-                setError(err.message || "Error fetching trips");
+                setTrips(backupTrips.slice(0, 3)); // fallback
             } finally {
-                setLoading(false);
+                setTimeout(() => setLoading(false), 1000); // simulate 1s loading
             }
         };
+
         fetchTrips();
     }, []);
 
@@ -41,10 +48,22 @@ function Home() {
 
             <section className="stairs-section">
                 <div className="cards-left">
-                    {loading && <p>Loading trips...</p>}
-                    {error && <p>Error: {error}</p>}
-                    {!loading && !error && trips.map((trip, i) => (
-                        <div key={trip.id} className={`card-wrapper card${i + 1}`}>
+                    {loading && (
+                        Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className={`card-wrapper card${i + 1}`}>
+                                <div className="trip-card skeleton">
+                                    <div className="skeleton-image" />
+                                    <div className="skeleton-content">
+                                        <div className="skeleton-line title" />
+                                        <div className="skeleton-line small" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+
+                    {!loading && trips.map((trip, i) => (
+                        <div key={trip.id || i} className={`card-wrapper card${i + 1}`}>
                             <TripCard trip={trip} />
                         </div>
                     ))}
