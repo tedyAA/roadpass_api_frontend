@@ -29,11 +29,20 @@ function Trips() {
 
     const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
 
+    // this is for error simulation
+    // change to true to trigger
+    const FORCE_ERROR = false;
+
     const fetchTrips = useCallback(async () => {
         setLoading(true);
         setApiError(false);
 
+        const start = Date.now();
+
         try {
+            if (FORCE_ERROR) {
+                throw new Error("Simulated API failure");
+            }
             const response = await axios.get(API_URL, {
                 params: {
                     page,
@@ -52,7 +61,14 @@ function Trips() {
             setTrips(backupTrips);
             setTotalPages(1);
         } finally {
-            setLoading(false);
+            const elapsed = Date.now() - start;
+            const remaining = 3000 - elapsed;
+
+            if (remaining > 0) {
+                setTimeout(() => setLoading(false), remaining);
+            } else {
+                setLoading(false);
+            }
         }
     }, [page, search, minRating, sort]);
 
@@ -119,13 +135,31 @@ function Trips() {
             </div>
 
             {apiError && (
-                <div className="api-warning">
-                    API unavailable — showing backup trips.
+                <div className="error-state">
+                    <div className="error-icon">⚠️</div>
+                    <h3>We couldn’t reach our servers</h3>
+                    <p>
+                        Don’t worry — we’re showing backup trips for now.
+                        You can try again anytime.
+                    </p>
+                    <button className="retry-btn" onClick={fetchTrips}>
+                        Try Again
+                    </button>
                 </div>
             )}
             <section>
                 {loading ? (
-                    <p className="loading">Loading trips...</p>
+                    <div className="trips-grid">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                            <div key={i} className="trip-card skeleton">
+                                <div className="skeleton-image" />
+                                <div className="skeleton-content">
+                                    <div className="skeleton-line title" />
+                                    <div className="skeleton-line small" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 ) : (
                     <>
                         <TripModal
